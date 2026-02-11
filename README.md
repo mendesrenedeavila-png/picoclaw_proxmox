@@ -1,55 +1,52 @@
-<div align="center">
-  <a href="#-picoclaw-in-proxmox-lxc-lightweight-ai-agent">🇺🇸 English</a> |
-  <a href="#-picoclaw-no-proxmox-lxc-agente-de-ia-leve">🇧🇷 Português</a>
-</div>
+# 🤖 PicoClaw no Proxmox LXC: Um Agente de IA Leve (<15MB RAM)
+
+Este repositório documenta a implementação do [PicoClaw](https://github.com/sipeed/picoclaw) — um agente de IA minimalista escrito em Go — rodando dentro de um container **LXC (Linux Container)** no **Proxmox VE**.
+
+O objetivo deste projeto foi criar um assistente de IA pessoal, acessível via **Telegram**, que rodasse 24/7 com consumo de recursos praticamente irrelevante.
+
+## 🚀 Por que PicoClaw + LXC?
+
+A maioria das soluções de IA locais exige hardware pesado ou VMs dedicadas. O PicoClaw muda esse jogo:
+* **Eficiência Extrema:** O binário consome cerca de **10MB de RAM**.
+* **Sem Interface Web Pesada:** Funciona como um gateway para Telegram/Discord.
+* **LXC vs VM:** Ao usar LXC no Proxmox (em vez de uma VM completa), compartilhamos o kernel do host, reduzindo o overhead a quase zero.
 
 ---
 
-# 🤖 PicoClaw in Proxmox LXC: Lightweight AI Agent
+## 🛠️ Stack & Requisitos
 
-This repository documents the implementation of [PicoClaw](https://github.com/sipeed/picoclaw) — a minimalist AI agent written in Go — running inside a **Proxmox VE LXC (Linux Container)**.
-
-The goal is to have a personal AI assistant accessible via **Telegram** running 24/7 with negligible resource consumption (**<15MB RAM**).
-
-## 🚀 Why PicoClaw + LXC?
-
-Most local AI solutions require heavy hardware or dedicated VMs. PicoClaw changes the game:
-* **Extreme Efficiency:** The binary consumes ~10MB of RAM.
-* **Headless:** Works as a gateway for Telegram/Discord (no heavy Web UI).
-* **LXC vs VM:** By using LXC on Proxmox instead of a full VM, we share the host kernel, reducing overhead to near zero.
-
-## 🛠️ Stack & Requirements
-
-* **Hypervisor:** Proxmox VE 9.x (Debian 13/Trixie base)
-* **Container:** LXC (Debian 13 Standard Template)
-* **Agent:** PicoClaw (v0.0.1+)
-* **LLM Provider:** [OpenRouter](https://openrouter.ai/) (Access to Gemini 2.0 Flash, DeepSeek, Claude, etc.)
+* **Hypervisor:** Proxmox VE 9.0 (Debian 13/Trixie base)
+* **Container:** LXC (Debian 13 Standard)
+* **Agente:** PicoClaw (v0.0.1+)
+* **LLM Provider:** [OpenRouter](https://openrouter.ai/) (Acesso a Gemini 2.0 Flash, DeepSeek, Claude, etc.)
 * **Interface:** Telegram Bot
 
-## ⚙️ Installation Guide
+---
 
-### 1. LXC Creation
-Create a CT in Proxmox with these "Sweet Spot" parameters:
-* **Template:** `debian-13-standard` (or 12)
+## ⚙️ Guia de Instalação
+
+### 1. Criação do Container LXC
+No Proxmox, crie um CT com os seguintes parâmetros "Sweet Spot":
+* **Template:** `debian-13-standard` (ou 12)
 * **CPU:** 1 Core
 * **RAM:** 128 MB (Swap: 128 MB)
-* **Disk:** 2 GB - 4 GB
+* **Disk:** 2 GB a 4 GB
 * **Network:** DHCP (IPv4)
-* **Unprivileged:** Yes
+* **Unprivileged:** Sim
 
-### 2. Installing PicoClaw
-Access the container console and download the binary.
-*Note: Check [GitHub Releases](https://github.com/sipeed/picoclaw/releases) for the latest version.*
+### 2. Instalação do PicoClaw
+Acesse o terminal do container e baixe o binário.
+*Nota: Substitua a URL pela versão mais recente encontrada nas [Releases do GitHub](https://github.com/sipeed/picoclaw/releases).*
 
 ```bash
 apt update && apt install -y wget nano ca-certificates
 
-# Create directory
+# Criar diretório
 mkdir -p /opt/picoclaw
 cd /opt/picoclaw
 
-# Download binary (Example for Linux AMD64)
+# Baixar o binário (exemplo para Linux AMD64)
 wget -O picoclaw [https://github.com/sipeed/picoclaw/releases/download/v0.0.1/picoclaw-linux-amd64](https://github.com/sipeed/picoclaw/releases/download/v0.0.1/picoclaw-linux-amd64)
 
-# Make executable
+# Tornar executável
 chmod +x picoclaw
